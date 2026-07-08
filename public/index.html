@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>Warhex Arena Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="networkBanner" class="network-banner hidden">🔌 جاري إعادة الاتصال...</div>
+
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-core glass">
+      <div class="logo-mark">⚔</div>
+      <h1>WARHEX ARENA PRO</h1>
+      <p>Multiplayer • Voice • Social • Missions • Store</p>
+      <div class="loading-bar-shell"><div class="loading-bar" id="loadingBar"></div></div>
+      <div class="loading-meta"><span id="loadingPercent">0%</span><span id="loadingStatus">تهيئة النظام</span></div>
+    </div>
+  </div>
+
+  <section id="authScreen" class="auth-screen hidden">
+    <div class="auth-card glass">
+      <div class="auth-brand">
+        <div class="logo-mark large">⚔</div>
+        <div>
+          <h1>Warhex Arena Pro</h1>
+          <p>منصة ألعاب لوحية متعددة اللاعبين جاهزة للإنتاج</p>
+        </div>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">تسجيل الدخول</button>
+        <button class="auth-tab" data-auth-tab="register">حساب جديد</button>
+      </div>
+      <div id="loginPane" class="auth-pane active">
+        <label>اسم المستخدم<input id="loginUser" type="text" /></label>
+        <label>كلمة المرور<input id="loginPass" type="password" /></label>
+        <button id="loginBtn" class="primary-btn">دخول</button>
+        <div id="loginError" class="form-error"></div>
+      </div>
+      <div id="registerPane" class="auth-pane hidden">
+        <label>اسم المستخدم<input id="registerUser" type="text" /></label>
+        <label>كلمة المرور<input id="registerPass" type="password" /></label>
+        <button id="registerBtn" class="primary-btn">إنشاء حساب</button>
+        <div id="registerError" class="form-error"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appShell" class="app-shell hidden">
+    <header class="topbar glass">
+      <div class="brand-block">
+        <div class="logo-mark">⚔</div>
+        <div>
+          <h2>Warhex Arena Pro</h2>
+          <small id="presenceText">متصل</small>
+        </div>
+      </div>
+      <div class="wallet-strip" id="walletStrip"></div>
+      <div class="profile-chip">
+        <button id="notificationsBtn" class="icon-btn">🔔<span id="notifCount" class="count-pill hidden">0</span></button>
+        <button id="profileQuickBtn" class="icon-btn avatar-btn"><span id="userAvatar">♞</span></button>
+      </div>
+    </header>
+
+    <nav class="side-nav glass">
+      <button class="nav-btn active" data-screen="play">🎮 اللعب</button>
+      <button class="nav-btn" data-screen="social">👥 الاجتماعي</button>
+      <button class="nav-btn" data-screen="store">🛒 المتجر</button>
+      <button class="nav-btn" data-screen="missions">🎯 المهام</button>
+      <button class="nav-btn" data-screen="rewards">🎁 الجوائز</button>
+      <button class="nav-btn" data-screen="profile">🪪 الملف الشخصي</button>
+      <button class="nav-btn" data-screen="settings">⚙️ الإعدادات</button>
+    </nav>
+
+    <main class="app-main">
+      <section class="screen active" data-screen="play">
+        <div class="hero-panel glass">
+          <div>
+            <h3>اختر اللعبة والوضع</h3>
+            <p>غرف خاصة، دعوات، مشاركة روابط، مباراة عشوائية، AI، وصوت مباشر.</p>
+          </div>
+          <div class="hero-actions">
+            <button id="claimLoginBtn" class="secondary-btn">استلام مكافأة الدخول</button>
+            <button id="openCreateRoomBtn" class="primary-btn">إنشاء غرفة</button>
+          </div>
+        </div>
+        <div class="game-grid" id="gameGrid"></div>
+        <div class="mode-grid" id="modeGrid"></div>
+        <div class="panel-grid two-col">
+          <div class="panel glass">
+            <div class="panel-head"><h4>الانضمام إلى غرفة</h4></div>
+            <div class="inline-form">
+              <input id="joinRoomCodeInput" placeholder="A7F2KD" maxlength="6" />
+              <button id="joinRoomDirectBtn" class="primary-btn">انضمام</button>
+            </div>
+            <small class="muted">يمكنك أيضاً فتح رابط /join/CODE أو warhex://join/CODE</small>
+          </div>
+          <div class="panel glass" id="currentRoomPanel"></div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="social">
+        <div class="panel-grid social-layout">
+          <div class="panel glass">
+            <div class="panel-head spaced">
+              <h4>الأصدقاء والطلبات</h4>
+              <button id="addFriendBtn" class="secondary-btn">إضافة صديق</button>
+            </div>
+            <div id="friendRequestsList" class="stack-list"></div>
+            <div id="friendsList" class="stack-list"></div>
+          </div>
+          <div class="panel glass">
+            <div class="panel-head spaced">
+              <h4 id="chatHeader">الدردشة الخاصة</h4>
+              <button id="inviteSelectedFriendBtn" class="secondary-btn">دعوة للعب</button>
+            </div>
+            <div id="chatMeta" class="chat-meta muted">اختر صديقاً لفتح المحادثة</div>
+            <div id="privateMessages" class="messages-board"></div>
+            <div id="typingIndicator" class="typing-indicator"></div>
+            <div class="message-composer">
+              <input id="privateMessageInput" placeholder="اكتب رسالة خاصة" />
+              <button id="sendPrivateMessageBtn" class="icon-btn">➤</button>
+              <button id="recordVoiceMsgBtn" class="icon-btn">🎙️</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="store">
+        <div class="panel glass">
+          <div class="panel-head spaced"><h4>المتجر والشحن</h4><select id="paymentProviderSelect"><option value="stripe">Stripe</option><option value="paypal">PayPal</option><option value="google_play">Google Play</option><option value="apple_iap">Apple IAP</option></select></div>
+          <div id="storeList" class="cards-grid"></div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="missions">
+        <div class="panel-grid two-col">
+          <div class="panel glass"><div class="panel-head"><h4>المهام</h4></div><div id="missionsList" class="stack-list"></div></div>
+          <div class="panel glass"><div class="panel-head"><h4>الإنجازات</h4></div><div id="achievementsList" class="stack-list"></div></div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="rewards">
+        <div class="panel-grid two-col">
+          <div class="panel glass">
+            <div class="panel-head spaced"><h4>الجوائز اليومية والهدايا</h4><button id="dailyGiftBtn" class="secondary-btn">هدية يومية</button></div>
+            <div class="reward-actions">
+              <button id="luckyGiftBtn" class="secondary-btn">Lucky Gift</button>
+              <button id="birthdayGiftBtn" class="secondary-btn">Birthday Gift</button>
+            </div>
+            <div id="giftHistory" class="stack-list"></div>
+          </div>
+          <div class="panel glass">
+            <div class="panel-head"><h4>تقويم 30 يوم</h4></div>
+            <div id="calendarRewards" class="calendar-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="profile">
+        <div class="panel-grid two-col">
+          <div class="panel glass" id="profilePanel"></div>
+          <div class="panel glass">
+            <div class="panel-head"><h4>السجل والمقتنيات</h4></div>
+            <div id="inventoryPanel" class="stack-list"></div>
+            <div id="historyPanel" class="stack-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="settings">
+        <div class="panel glass">
+          <div class="panel-head"><h4>الإعدادات</h4></div>
+          <div id="settingsPanel" class="settings-grid"></div>
+          <div class="settings-actions">
+            <button id="saveSettingsBtn" class="primary-btn">حفظ الإعدادات</button>
+            <button id="logoutBtn" class="secondary-btn">خروج</button>
+            <button id="deleteAccountBtn" class="secondary-btn danger">Delete Account</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <section id="gameScreen" class="game-screen hidden">
+    <header class="match-top glass">
+      <button id="leaveMatchBtn" class="secondary-btn danger">خروج</button>
+      <div class="match-center">
+        <h3 id="matchTitle">المباراة</h3>
+        <div class="match-links">
+          <span id="matchRoomCode">ROOM</span>
+          <button id="copyMatchLinkBtn" class="icon-btn">📋</button>
+          <button id="shareMatchBtn" class="icon-btn">🔗</button>
+          <button id="matchInviteBtn" class="icon-btn">👥</button>
+        </div>
+      </div>
+      <div class="match-actions">
+        <button id="drawOfferBtn" class="icon-btn">🤝</button>
+        <button id="resignBtn" class="icon-btn">🏳️</button>
+        <button id="replayBtn" class="icon-btn">🔄</button>
+        <button id="matchGiftBtn" class="icon-btn">🎁</button>
+      </div>
+    </header>
+
+    <div class="match-layout">
+      <aside class="match-side glass" id="matchPlayersPanel"></aside>
+      <div class="match-board-wrap glass">
+        <div id="turnIndicator" class="turn-banner">في انتظار البداية</div>
+        <div id="gameMount" class="game-mount"></div>
+        <div id="matchAnalysis" class="analysis-box hidden"></div>
+      </div>
+      <aside class="match-side glass">
+        <div class="panel-head spaced"><h4>دردشة وصوت</h4><div class="voice-mini"><button id="micToggleBtn" class="icon-btn">🎤</button><button id="muteToggleBtn" class="icon-btn">🔊</button></div></div>
+        <div id="voiceState" class="muted">الصوت غير مفعل</div>
+        <div id="gvChatMessages" class="messages-board compact"></div>
+        <div class="message-composer">
+          <input id="gvChatInput" placeholder="رسالة داخل المباراة" />
+          <button id="gvChatSend" class="icon-btn">➤</button>
+        </div>
+        <div class="match-utility-grid">
+          <button id="matchAddFriendBtn" class="secondary-btn">إضافة صديق</button>
+          <button id="matchReportBtn" class="secondary-btn">إبلاغ</button>
+        </div>
+        <div class="panel-head"><h4>سجل النقلات / الأحداث</h4></div>
+        <div id="gvMoveLog" class="stack-list compact"></div>
+      </aside>
+    </div>
+  </section>
+
+  <div id="matchmakingOverlay" class="overlay hidden">
+    <div class="overlay-card glass">
+      <div class="pulse-orb"></div>
+      <h3 id="mmTitle">البحث عن لاعب...</h3>
+      <div id="mmTimer" class="overlay-timer">00:00</div>
+      <div id="mmStatus" class="muted">نبحث عن خصم مناسب</div>
+      <button id="mmCancelBtn" class="secondary-btn danger">إلغاء البحث</button>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card glass">
+      <div class="panel-head spaced">
+        <h4 id="modalTitle">نافذة</h4>
+        <button id="closeModalBtn" class="icon-btn">✕</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="sound.js"></script>
+  <script src="voice.js"></script>
+  <script src="games/chess.js"></script>
+  <script src="games/ludo.js"></script>
+  <script src="games/jackaroo.js"></script>
+  <script src="games/warhex.js"></script>
+  <script src="games/connect4.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
